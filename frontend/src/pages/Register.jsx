@@ -8,6 +8,7 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "user",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,17 +17,25 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value, type, checked } = e.target;
+
+    if (type === "checkbox" && name === "isAdmin") {
+      setFormData({
+        ...formData,
+        role: checked ? "admin" : "user",
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    // Validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -53,7 +62,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 py-12 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-purple-600 mb-2">
@@ -63,12 +72,13 @@ const Register = () => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name */}
           <div>
             <label
               htmlFor="name"
@@ -88,6 +98,7 @@ const Register = () => {
             />
           </div>
 
+          {/* Email */}
           <div>
             <label
               htmlFor="email"
@@ -107,6 +118,7 @@ const Register = () => {
             />
           </div>
 
+          {/* Password */}
           <div>
             <label
               htmlFor="password"
@@ -126,6 +138,7 @@ const Register = () => {
             />
           </div>
 
+          {/* Confirm Password */}
           <div>
             <label
               htmlFor="confirmPassword"
@@ -145,15 +158,42 @@ const Register = () => {
             />
           </div>
 
+          {/* Admin Checkbox - THIS IS THE IMPORTANT PART */}
+          <div className="flex items-start pt-2 pb-2">
+            <div className="flex items-center h-5 mt-1">
+              <input
+                id="isAdmin"
+                name="isAdmin"
+                type="checkbox"
+                checked={formData.role === "admin"}
+                onChange={handleChange}
+                className="w-4 h-4 border-2 border-gray-300 rounded bg-white focus:ring-2 focus:ring-purple-500 cursor-pointer text-purple-600"
+              />
+            </div>
+            <div className="ml-3">
+              <label
+                htmlFor="isAdmin"
+                className="font-medium text-gray-700 cursor-pointer select-none"
+              >
+                Register as Admin
+              </label>
+              <p className="text-xs text-gray-500 mt-1">
+                Admins can add, edit, delete, and restock sweets
+              </p>
+            </div>
+          </div>
+
+          {/* Register Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed mt-6"
           >
             {loading ? "Creating Account..." : "Register"}
           </button>
         </form>
 
+        {/* Login Link */}
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Already have an account?{" "}
