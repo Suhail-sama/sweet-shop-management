@@ -1,4 +1,6 @@
 # 🍬 Sweet Shop Management System
+LIVE VERCEL - https://sweetshop-pi.vercel.app 
+BACKEND - https://sweet-shop-management-eight.vercel.app
 
 A full-stack web application for managing a sweet shop inventory with user authentication, role-based access control, and real-time inventory management.
 
