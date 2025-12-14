@@ -77,6 +77,14 @@ Claude significantly accelerated the initial setup phase and provided valuable i
 This project is created as part of a technical assessment.
 
 ---
+![Demo 1](public/Screenshot%202025-12-14%20174324.png)
+![Demo 2](public/Screenshot%202025-12-14%20174535.png)
+![Demo 3](public/Screenshot%202025-12-14%20174618.png)
+
+
+
+
 
 **Author**: Suhail Sama  
 **Created**: December 2024
+
