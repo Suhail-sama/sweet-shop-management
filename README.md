@@ -325,7 +325,8 @@ Suhail
 ![Demo 1](public/Screenshot%202025-12-14%20174324.png)
 ![Demo 2](public/Screenshot%202025-12-14%20174535.png)
 ![Demo 3](public/Screenshot%202025-12-14%20174618.png)
-![Tests](D:\sweetshop\public\Screenshot 2025-12-14 190038.pnggit)
+![Tests](public/Screenshot%202025-12-14%20190038.png)
+
 
 
 
