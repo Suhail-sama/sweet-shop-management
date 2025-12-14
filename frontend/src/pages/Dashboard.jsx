@@ -45,18 +45,19 @@ const Dashboard = () => {
   }, [searchTerm, category, priceRange, sweets]);
 
   const fetchSweets = async () => {
-    try {
-      setLoading(true);
-      const data = await sweetService.getAllSweets();
-      setSweets(data);
-      setError('');
-    } catch (err) {
-      setError('Failed to load sweets. Please try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    const data = await sweetService.getAllSweets();
+    setSweets(Array.isArray(data) ? data : []); // Ensure it's always an array
+    setError('');
+  } catch (err) {
+    setError('Failed to load sweets. Please try again.');
+    setSweets([]); // Set empty array on error
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const filterSweets = () => {
     let filtered = [...sweets];
