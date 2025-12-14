@@ -7,9 +7,6 @@ const errorHandler = require('./middleware/errorHandler');
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
-
 // Initialize express
 const app = express();
 
@@ -40,18 +37,25 @@ app.get('/', (req, res) => {
 // Error handler (must be last)
 app.use(errorHandler);
 
-// Start server
-const PORT = process.env.PORT || 3000;
+// Only start server if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  // Connect to database
+  connectDB();
 
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+  // Start server
+  const PORT = process.env.PORT || 3000;
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  console.log(`Error: ${err.message}`);
-  // Close server & exit process
-  server.close(() => process.exit(1));
-});
+  const server = app.listen(PORT, () => {
+    console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  });
 
+  // Handle unhandled promise rejections
+  process.on('unhandledRejection', (err, promise) => {
+    console.log(`Error: ${err.message}`);
+    // Close server & exit process
+    server.close(() => process.exit(1));
+  });
+}
+
+// Export app for testing
 module.exports = app;

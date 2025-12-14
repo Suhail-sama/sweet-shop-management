@@ -12,19 +12,24 @@ const {
 } = require('../controllers/sweetController');
 const { protect, authorize } = require('../middleware/auth');
 
-// All routes require authentication
-router.use(protect);
+// Public search (but protected - requires login)
+router.get('/search', protect, searchSweets);
 
-// Public sweet routes (for authenticated users)
-router.get('/', getAllSweets);
-router.get('/search', searchSweets);
-router.get('/:id', getSweet);
-router.post('/:id/purchase', purchaseSweet);
+// Get all sweets and create sweet
+router.route('/')
+  .get(protect, getAllSweets)
+  .post(protect, authorize('admin'), createSweet); // Only admin can create
 
-// Admin only routes
-router.post('/', authorize('admin'), createSweet);
-router.put('/:id', authorize('admin'), updateSweet);
-router.delete('/:id', authorize('admin'), deleteSweet);
-router.post('/:id/restock', authorize('admin'), restockSweet);
+// Get single sweet, update, delete
+router.route('/:id')
+  .get(protect, getSweet)
+  .put(protect, authorize('admin'), updateSweet) // Only admin can update
+  .delete(protect, authorize('admin'), deleteSweet); // Only admin can delete
+
+// Purchase sweet (any authenticated user)
+router.post('/:id/purchase', protect, purchaseSweet);
+
+// Restock sweet (admin only)
+router.post('/:id/restock', protect, authorize('admin'), restockSweet);
 
 module.exports = router;

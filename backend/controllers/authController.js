@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 // Generate JWT Token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+    expiresIn: process.env.JWT_EXPIRE || '30d',
   });
 };
 
@@ -13,30 +13,23 @@ const generateToken = (id) => {
 // @access  Public
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
-    // Validate input
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please provide name, email and password',
-      });
-    }
-
-    // Check if user exists
-    const userExists = await User.findOne({ email });
-    if (userExists) {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
       return res.status(400).json({
         success: false,
         message: 'User already exists with this email',
       });
     }
 
-    // Create user
+    // Create user with role (allow admin registration)
     const user = await User.create({
       name,
       email,
       password,
+      role: role || 'user', // Accept role from request or default to 'user'
     });
 
     // Generate token
@@ -64,7 +57,7 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
+    // Validate email & password
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -72,7 +65,7 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Check for user (include password)
+    // Check for user (include password for comparison)
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
